@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prepify - AI-Based ML Interview Preparation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-brain text-2xl"></i>
+                    <h1 class="text-2xl font-bold">Prepify</h1>
+                </div>
+                <div id="nav-menu" class="hidden space-x-6">
+                    <a href="#" onclick="showPage('home')" class="hover:text-indigo-200">Home</a>
+                    <a href="#" onclick="showPage('learn')" class="hover:text-indigo-200">Learn</a>
+                    <a href="#" onclick="showPage('code')" class="hover:text-indigo-200">Code Challenges</a>
+                    <a href="#" onclick="showPage('chatbot')" class="hover:text-indigo-200">AI Assistant</a>
+                    <a href="#" onclick="showPage('dashboard')" class="hover:text-indigo-200">Dashboard</a>
+                    <a href="#" onclick="showPage('leaderboard')" class="hover:text-indigo-200">Leaderboard</a>
+                    <button onclick="logout()" class="bg-red-500 px-4 py-1 rounded hover:bg-red-600">Logout</button>
+                </div>
+                <div id="auth-buttons" class="space-x-4">
+                    <button onclick="showAuthModal('login')" class="bg-white text-indigo-600 px-4 py-2 rounded font-semibold hover:bg-gray-100">Login</button>
+                    <button onclick="showAuthModal('register')" class="bg-indigo-800 px-4 py-2 rounded font-semibold hover:bg-indigo-900">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Landing Page -->
+        <div id="landing-page">
+            <div class="text-center py-16">
+                <h1 class="text-5xl font-bold text-gray-800 mb-4">Master ML & AI Interviews</h1>
+                <p class="text-xl text-gray-600 mb-8">AI-powered platform for placement preparation</p>
+                <div class="grid md:grid-cols-3 gap-8 mt-12">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <i class="fas fa-book-open text-4xl text-indigo-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Interactive Learning</h3>
+                        <p class="text-gray-600">Beginner to advanced ML topics with quizzes</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <i class="fas fa-code text-4xl text-indigo-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Coding Challenges</h3>
+                        <p class="text-gray-600">Practice ML algorithms with auto-evaluation</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <i class="fas fa-robot text-4xl text-indigo-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">AI Assistant</h3>
+                        <p class="text-gray-600">24/7 chatbot for ML and coding doubts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Page -->
+        <div id="learn-page" class="hidden">
+            <h2 class="text-3xl font-bold mb-6">Learning Modules</h2>
+            <div id="modules-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            
+            <!-- Module Detail Modal -->
+            <div id="module-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg p-8 max-w-4xl max-h-[90vh] overflow-y-auto w-full mx-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 id="module-title" class="text-2xl font-bold"></h3>
+                        <button onclick="closeModuleModal()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-2xl"></i>
+                        </button>
+                    </div>
+                    <div id="module-content" class="prose max-w-none mb-6"></div>
+                    <button onclick="completeModule()" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 mr-4">Mark Complete</button>
+                    <button onclick="startQuiz()" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700">Take Quiz</button>
+                </div>
+            </div>
+
+            <!-- Quiz Modal -->
+            <div id="quiz-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg p-8 max-w-3xl max-h-[90vh] overflow-y-auto w-full mx-4">
+                    <h3 id="quiz-title" class="text-2xl font-bold mb-6"></h3>
+                    <div id="quiz-questions"></div>
+                    <button onclick="submitQuiz()" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 mt-4">Submit Quiz</button>
+                </div>
+            </div>
+
+            <!-- Quiz Result Modal -->
+            <div id="quiz-result-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4">
+                    <h3 class="text-2xl font-bold mb-4">Quiz Results</h3>
+                    <div id="quiz-results"></div>
+                    <button onclick="closeQuizResult()" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 mt-4">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coding Challenges Page -->
+        <div id="code-page" class="hidden">
+            <h2 class="text-3xl font-bold mb-6">Coding Challenges</h2>
+            <div id="challenges-list" class="space-y-4"></div>
+
+            <!-- Challenge Detail Modal -->
+            <div id="challenge-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg p-8 max-w-6xl max-h-[90vh] overflow-y-auto w-full mx-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 id="challenge-title" class="text-2xl font-bold"></h3>
+                            <span id="challenge-difficulty" class="inline-block px-3 py-1 rounded text-sm font-semibold mt-2"></span>
+                        </div>
+                        <button onclick="closeChallengeModal()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-2xl"></i>
+                        </button>
+                    </div>
+                    <div id="challenge-description" class="mb-4 text-gray-700"></div>
+                    <div id="challenge-hints" class="mb-4 p-4 bg-yellow-50 rounded border border-yellow-200"></div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold mb-2">Your Code:</label>
+                        <textarea id="code-editor" class="w-full h-64 p-4 border rounded font-mono text-sm bg-gray-50" spellcheck="false"></textarea>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button onclick="submitCode()" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700">Submit Code</button>
+                        <button onclick="resetCode()" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">Reset</button>
+                    </div>
+                    <div id="code-result" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Chatbot Page -->
+        <div id="chatbot-page" class="hidden">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-6">AI Assistant</h2>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div id="chat-messages" class="h-96 overflow-y-auto mb-4 space-y-4"></div>
+                    <div class="flex space-x-2">
+                        <input type="text" id="chat-input" placeholder="Ask me anything about ML, Python, or interview prep..." 
+                            class="flex-1 border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                        <button onclick="sendMessage()" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="hidden">
+            <h2 class="text-3xl font-bold mb-6">Your Progress Dashboard</h2>
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Total Points</p>
+                            <p id="total-points" class="text-3xl font-bold text-indigo-600">0</p>
+                        </div>
+                        <i class="fas fa-star text-4xl text-yellow-400"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Modules Completed</p>
+                            <p id="completed-modules" class="text-3xl font-bold text-green-600">0</p>
+                        </div>
+                        <i class="fas fa-book text-4xl text-green-400"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Quiz Average</p>
+                            <p id="avg-quiz-score" class="text-3xl font-bold text-blue-600">0%</p>
+                        </div>
+                        <i class="fas fa-chart-line text-4xl text-blue-400"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Challenges Passed</p>
+                            <p id="passed-challenges" class="text-3xl font-bold text-purple-600">0</p>
+                        </div>
+                        <i class="fas fa-code text-4xl text-purple-400"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-bold mb-4">Performance Overview</h3>
+                <canvas id="progress-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Leaderboard Page -->
+        <div id="leaderboard-page" class="hidden">
+            <h2 class="text-3xl font-bold mb-6">Leaderboard</h2>
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-indigo-600 text-white">
+                        <tr>
+                            <th class="px-6 py-3 text-left">Rank</th>
+                            <th class="px-6 py-3 text-left">Name</th>
+                            <th class="px-6 py-3 text-left">Username</th>
+                            <th class="px-6 py-3 text-left">Points</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <h3 id="auth-modal-title" class="text-2xl font-bold mb-6">Login</h3>
+            <div id="login-form">
+                <input type="text" id="login-username" placeholder="Username" class="w-full border rounded px-4 py-2 mb-4">
+                <input type="password" id="login-password" placeholder="Password" class="w-full border rounded px-4 py-2 mb-4">
+                <button onclick="login()" class="w-full bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Login</button>
+                <p class="mt-4 text-center text-sm">Don't have an account? <a href="#" onclick="showAuthModal('register')" class="text-indigo-600 hover:underline">Sign up</a></p>
+            </div>
+            <div id="register-form" class="hidden">
+                <input type="text" id="register-username" placeholder="Username" class="w-full border rounded px-4 py-2 mb-4">
+                <input type="email" id="register-email" placeholder="Email" class="w-full border rounded px-4 py-2 mb-4">
+                <input type="text" id="register-fullname" placeholder="Full Name" class="w-full border rounded px-4 py-2 mb-4">
+                <input type="password" id="register-password" placeholder="Password" class="w-full border rounded px-4 py-2 mb-4">
+                <button onclick="register()" class="w-full bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Sign Up</button>
+                <p class="mt-4 text-center text-sm">Already have an account? <a href="#" onclick="showAuthModal('login')" class="text-indigo-600 hover:underline">Login</a></p>
+            </div>
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
