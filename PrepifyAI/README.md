@@ -35,15 +35,12 @@ An AI-powered web platform designed to help college students prepare for placeme
 ## Setup
 
 The application runs automatically via Replit workflows. Required environment variables:
-- `OPENAI_API_KEY` - sk-abcdef1234567890abcdef1234567890abcdef12
+- `OPENAI_API_KEY` - 
 
-- `SESSION_SECRET` - Flask session secret (auto-generated in dev)
+- `SESSION_SECRET` - 
 
-## Documentation
 
-- [Full Project Documentation](replit.md)
-- [Security Information](SECURITY.md)
-
+-
 ## Use Case
 
 This platform is ideal for:
